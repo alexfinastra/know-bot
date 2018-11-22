@@ -13,13 +13,15 @@ router.get('/add/:source', function(req, res, next){
     // store or update documents in mongodb
     if(documents.length > 0){
       documents.forEach(function(dct){
-        db.collection("businessguides").insertOne(dct, function(err, doc) {
-          if (err) {
-            handleError(res, err.message, "Failed to create new docuemnt.");
-          } else {
-            console.log("New document created " + doc.ops[0] );
-          }
-        });
+        //db.collection("businessguides").insertOne(dct, function(err, doc) {
+        //  if (err) {
+        //    handleError(res, err.message, "Failed to create new docuemnt.");
+        //  } else {
+        //    console.log("New document created " + doc.ops[0] );
+        //  }
+        //fs.writeFileSync(appRoot + "documents.json", JSON.stringify(dct) , ['utf-8','as+']);
+        
+        //});
       })
     }
   }, function(err) {
@@ -66,6 +68,9 @@ function split2documents(filename, data){
   remained_arr = remained.split(first_section);
   remained = remained_arr[remained_arr.length-1];
 
+  console.log("\n\n\n************************************************")
+  console.log("Filename  : " + filename); 
+  
   // go in loop and cut with next item , cutting part save 
   for(var i=0; i<len; i++){    
     section = toc_items[i].split('.......')[0];
@@ -82,16 +87,23 @@ function split2documents(filename, data){
           }
     }
 
-    docs.push({
-      "filename": filename,
-      "numpages": data.numpages,
-      "info": data.info,
-      "metadata": data.metadata,
-      "version": data.version,
-      "section" : section,
-      "content" : content
-    });    
+    if(content != undefined){
+      console.log("\n-----------------------------------------")
+      console.log("Section : " + section);
+      //console.log("Content : " + content);
+      //console.log("-----------------------------------------")
+      docs.push({
+        "filename": filename,
+        "numpages": data.numpages,
+        "info": data.info,
+        "metadata": data.metadata,
+        "version": data.version,
+        "section" : section,
+        "content" : content
+      });    
+    }
   }
+  console.log("************************************************\n\n\n")
   return docs;
  }
 
