@@ -1,9 +1,9 @@
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var flash = require('express-flash');
 var session = require('express-session');
+var logger = require('morgan');
 
 var index = require('./routes/index');
 var webhook = require('./routes/webhook');
@@ -25,7 +25,6 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(session({
     secret: "secretpass123456",
     resave: false,
