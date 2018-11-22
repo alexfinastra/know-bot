@@ -7,10 +7,10 @@ var logger = require('morgan');
 
 var index = require('./routes/index');
 var webhook = require('./routes/webhook');
-var onboard = require('./routes/onboard');
+var documents = require('./routes/documents');
 
 var expressValidator = require('express-validator');
-
+var db;
 var app = express();
 global.appRoot = path.resolve(__dirname);
 global.currentFlow = "";
@@ -36,7 +36,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/webhook', webhook);
-app.use('/onboard', onboard);
+app.use('/documents', documents);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
