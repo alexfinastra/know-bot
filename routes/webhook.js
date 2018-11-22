@@ -8,10 +8,40 @@ router.get('/', function(req, res) {
 
 
 router.post('/', function(req, res, next) {
-  //console.log(JSON.stringify(req, null, 2));
+  console.log("try :" + JSON.stringify(req.body.queryResult.parameters));
   
   res.json({
-    "fulfillmentText": "This is a text response" 
+    "fulfillmentText": "Thak you for your call",
+    "fulfillmentMessages": [
+      {
+        "card": {
+          "title": "card title",
+          "subtitle": "card text",
+          "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+          "buttons": [
+            {
+              "text": "button text",
+              "postback": "https://assistant.google.com/"
+            }
+          ]
+        }
+      }
+    ],
+    "source": "example.com",
+    "payload": {
+      "google": {
+        "expectUserResponse": true,
+        "richResponse": {
+          "items": [
+            {
+              "simpleResponse": {
+                "textToSpeech": "this is a simple response"
+              }
+            }
+          ]
+        }
+      }
+    }
   });   
 });
 
