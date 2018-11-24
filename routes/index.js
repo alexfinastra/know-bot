@@ -3,7 +3,7 @@ var router = express.Router();
 var session_store;
 var nodemailer = require('nodemailer');
 
-var USERS_COLLECTION = "users"
+var USERS_COLLECTION = "users";
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

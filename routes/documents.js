@@ -2,26 +2,24 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var pdf = require('pdf-parse');
+var BUSINESSGUIDES_COLLECTION = "businessguides";
 
 router.get('/', function(req, res, next) {
 	res.send("OK !!!")   	
 });
-
 
 router.get('/add/:source', function(req, res, next){ 
   readFiles(db, 'public/docs/', function(db, filename, documents) {    
     // store or update documents in mongodb
     if(documents.length > 0){
       documents.forEach(function(dct){
-      //db.collection("businessguides").insertOne(dct, function(err, doc) {
-      //  if (err) {
-      //    handleError(res, err.message, "Failed to create new docuemnt.");
-      //  } else {
-      //    console.log("New document created " + doc.ops[0] );
-      //  }
-      //fs.writeFileSync(appRoot + "documents.json", JSON.stringify(dct) , ['utf-8','as+']);
-      
-      //});
+        db.collection(BUSINESSGUIDES_COLLECTION).insertOne(dct, function(err, doc) {
+          if (err) {
+            handleError(res, err.message, "Failed to create new docuemnt.");
+          } else {
+            console.log("New document created " + doc.ops[0] );
+          }        
+        });
       })
     }
   }, function(err) {
@@ -44,74 +42,85 @@ function readFiles(db, dirname, onFileContent, onError) {
     filenames.forEach(function(filename) {     
       let dataBuffer = fs.readFileSync(dirname + filename);
       pdf(dataBuffer).then(function(data) { 
-          var documents = split2documents(filename, data);
-          onFileContent(db, filename, documents);
+          split2documents(filename, data, onFileContent);
       });
     });
   });
 }
 
 
-function split2documents(filename, data){ 
+function split2documents(filename, data, cb){ 
+  //console.log("\n\n\n************************************************")
+  //console.log("File name: "  + filename); 
+      
   var docs = []
   //get table of content
   remained_arr = data.text.split("Table of Contents")
+  //console.log("Filename  :"+ filename + " has TOC parts : " + remained_arr.length); 
   remained = remained_arr[remained_arr.length -1];  
+  //console.log("Filename  :"+ filename + " cut all before TOC : " + remained.substring(0,100)); 
 
   // split to separate items for next parse
-  toc_items = remained.split('\n').filter(function(p){return p.indexOf('.......') > -1 });
+  toc_items = remained.split('\n').filter(function(p){return p.indexOf('..........') > -1 });
   len = toc_items.length;
 
   // get the first section namd and cunt untill it
-  first_section = toc_items[0].split('.......')[0];
+  first_section = toc_items[0].split('.......')[0].replace(/[0-9]/g, '').replace('.', '').trim();
   if((/[a-z]/.test(first_section)) == false){ first_section = first_section.capitalize() };
+  //console.log("Filename  :"+ filename + " FIRST SECTION : " + first_section);   
   remained_arr = remained.split(first_section);
+  //console.log("Filename  :"+ filename + " has FIRST SECTION parts : " + remained_arr.length); 
   remained = remained_arr[remained_arr.length-1];
-
-  console.log("\n\n\n************************************************")
-  console.log("Filename  : " + filename); 
+  //console.log("Filename  :"+ filename + " cut all before FIRST SECTION : " + remained.substring(0,100)); 
+  
   
   // go in loop and cut with next item , cutting part save 
   for(var i=0; i<len; i++){    
-    section = toc_items[i].split('.......')[0];
+    section = toc_items[i].split('.......')[0].replace(/[0-9]/g, '').replace('.', '').trim();
     if((/[a-z]/.test(section)) == false){ section = section.capitalize() }
+    //console.log("Filename  :"+ filename + " CURRENT SECTION : " + section);
+    //console.log("Filename  :"+ filename + " cut all after CURRENT SECTION : " + remained.substring(0,100)); 
 
     if(toc_items[i+1] == undefined){
       content = remained
     } else {
       if ( remained != undefined){
-            next = toc_items[i+1].split('.......')[0];      
+            next = toc_items[i+1].split('.......')[0].replace(/[0-9]/g, '').replace('.', '').trim();;      
             if((/[a-z]/.test(next)) == false){ next = next.capitalize() }
-            content = remained.split(next)[0];
-            remained = remained.split(next)[1];    
+            //console.log("Filename  :"+ filename + " NEXT SECTION : " + next);
+            remained_arr = remained.split(next);
+            //console.log("Filename  :"+ filename + " has NEXT SECTION parts : " + remained_arr.length); 
+            if(remained_arr.length > 1){
+              content = remained_arr[0];
+              remained = remained_arr[remained_arr.length-1];    
+              console.log("Filename  :"+ filename + " content : " + content.substring(0,100));  
+            }
           }
     }
 
     if(content != undefined){
-      console.log("\n-----------------------------------------")
-      console.log("Section : " + section);
+      //console.log("\n-----------------------------------------")
+      //console.log("Section : " + section);
       //console.log("Content : " + content);
       //console.log("-----------------------------------------")
       docs.push({
         "filename": filename,
         "numpages": data.numpages,
-        "info": data.info,
-        "metadata": data.metadata,
-        "version": data.version,
+        "scope": filename.replace(".pdf","").replace("GPP Business Guide",""),
         "section" : section,
-        "content" : content
+        "content" : content.replace(/\r?\n|\r/g,"").split(". ").map(s => s.trim())
       });    
     }
   }
-  console.log("************************************************\n\n\n")
-  return docs;
+  //console.log("************************************************\n\n\n")
+  cb(db, filename, docs);
  }
 
 String.prototype.capitalize = function() {
   str_arr = this.split(" ")
   res = []
   str_arr.forEach(function(str){
-    if(str.toLowerCase().indexOf("and") > -1){
+    if(str.trim().toLowerCase().indexOf("and") > -1 && str.trim().length == 3){
       res.push("and")
     }else{
       res.push( (str.charAt(0).toUpperCase() + str.toLowerCase().slice(1)) )
@@ -119,3 +128,4 @@ String.prototype.capitalize = function() {
   })
   return res.join(" ");
 }
+

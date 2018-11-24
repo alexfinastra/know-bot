@@ -11,6 +11,7 @@ var documents = require('./routes/documents');
 
 var expressValidator = require('express-validator');
 var db;
+
 var app = express();
 global.appRoot = path.resolve(__dirname);
 global.currentFlow = "";
