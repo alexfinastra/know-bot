@@ -23,7 +23,7 @@ router.get('/confirmation',function(req,res,next){
 			if(user == null){
 				res.redirect('/login');
 			} else {
-				res.render('confirmation');
+				res.render('confirmation', {email: user["email"]});
 			}
 		});
 	}
