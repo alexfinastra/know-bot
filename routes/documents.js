@@ -13,15 +13,15 @@ router.get('/add/:source', function(req, res, next){
     // store or update documents in mongodb
     if(documents.length > 0){
       documents.forEach(function(dct){
-        //db.collection("businessguides").insertOne(dct, function(err, doc) {
-        //  if (err) {
-        //    handleError(res, err.message, "Failed to create new docuemnt.");
-        //  } else {
-        //    console.log("New document created " + doc.ops[0] );
-        //  }
-        //fs.writeFileSync(appRoot + "documents.json", JSON.stringify(dct) , ['utf-8','as+']);
-        
-        //});
+      //db.collection("businessguides").insertOne(dct, function(err, doc) {
+      //  if (err) {
+      //    handleError(res, err.message, "Failed to create new docuemnt.");
+      //  } else {
+      //    console.log("New document created " + doc.ops[0] );
+      //  }
+      //fs.writeFileSync(appRoot + "documents.json", JSON.stringify(dct) , ['utf-8','as+']);
+      
+      //});
       })
     }
   }, function(err) {

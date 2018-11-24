@@ -12,10 +12,4 @@ html(lang='en')
     link(rel='stylesheet', href='/stylesheets/login.css')  
     script(src="/javascripts/jquery-3.2.1.min.js")  
   body.text-center
-    form.form-signin(action="/login", method="post")
-      img.mb-3(src='img/geek.png', alt='', width='72', height='72')
-      h1.h3.mb-5.font-weight-normal(style="font-family: 'Alfa Slab One', cursive;;font-size: 3rem;") GPP Trivia
-      label.sr-only(for='inputEmail') Email address
-      input#inputEmail.form-control.mt-5(type='email', placeholder='Email address', required='', autofocus='', name="email")
-      button.btn.btn-lg.btn-primary.btn-block.mt-3(type='submit') Sign in
-      p.mt-5.mb-3.text-muted © 2018
+    iframe(allow='microphone;', width='100%', height='100%', src='https://console.dialogflow.com/api-client/demo/embedded/4cc2ba0e-7020-4060-88ab-50ab871455f5')

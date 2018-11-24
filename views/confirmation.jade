@@ -12,10 +12,11 @@ html(lang='en')
     link(rel='stylesheet', href='/stylesheets/login.css')  
     script(src="/javascripts/jquery-3.2.1.min.js")  
   body.text-center
-    form.form-signin(action="/login", method="post")
+    form.form-signin(action="/verify", method="post")
       img.mb-3(src='img/geek.png', alt='', width='72', height='72')
-      h1.h3.mb-5.font-weight-normal(style="font-family: 'Alfa Slab One', cursive;;font-size: 3rem;") GPP Trivia
-      label.sr-only(for='inputEmail') Email address
-      input#inputEmail.form-control.mt-5(type='email', placeholder='Email address', required='', autofocus='', name="email")
-      button.btn.btn-lg.btn-primary.btn-block.mt-3(type='submit') Sign in
+      h1.h3.mb-5.font-weight-normal(style="font-family: 'Alfa Slab One', cursive;;font-size: 3rem;") Verify code
+      label.sr-only(for='inputCode') Verification Code
+      input#inputCode.form-control.mt-5(type='text', placeholder='Verify code', required='', autofocus='', name="code")
+      button.btn.btn-lg.btn-primary.btn-block.mt-3(type='submit') Verify
+      a.btn.btn-link.mt-1(href="/resend") Resend code
       p.mt-5.mb-3.text-muted © 2018
