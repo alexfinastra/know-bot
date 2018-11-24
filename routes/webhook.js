@@ -7,13 +7,22 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res, next) {
-  console.log("try :" + JSON.stringify(req.body.queryResult));
-  
-  buildQuestion(function(doc){
-    res.json({
-      "fulfillmentText": doc
-    }); 
-  })    
+  console.log("******************************");
+  console.log("webhook request :" + JSON.stringify(req.body.queryResult));
+  console.log("try :" + JSON.stringify(req.session));
+  switch (req.body.queryResult["intent"]["displayName"]){
+    case "Business Guide Trivia":
+      buildQuestion(function(doc){
+        res.json({
+          "fulfillmentText": doc
+        }); 
+      })  
+      break;
+    case "Business Guide - yes":
+      break;
+    case "Business Guide - no":
+      break;
+  }    
 });
 
 
