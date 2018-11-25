@@ -64,8 +64,8 @@ router.post('/', function(req, res, next) {
 
 module.exports = router;
 
-function buildQuestion(req, cb){
-   db.collection(BUSINESSGUIDES_COLLECTION).find({}).toArray(function(err, result) {
+function buildQuestion(cb){
+   db.collection(BUSINESSGUIDES_COLLECTION).find({}).toArray(function(err, result, cb) {
     if (err) throw err;
     var limit = result.length-1;    
     doc = result[Math.floor(Math.random() * (limit))];
