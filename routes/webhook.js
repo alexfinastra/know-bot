@@ -69,6 +69,7 @@ function buildQuestion(cb){
     if (err) throw err;
     var limit = result.length-1;    
     doc = result[Math.floor(Math.random() * (limit))];
+    console.log("Question is " + JSON.stringify(doc));
     cb(doc);
   });
 }
@@ -144,6 +145,7 @@ function replyWithDefinition(opts, res){
         });
  
 }
+
 function checkifCorrect (answer) {
   return true;
 }
