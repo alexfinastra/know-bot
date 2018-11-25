@@ -26,12 +26,11 @@ router.post('/', function(req, res, next) {
         });
       })
       break;
-    case "Next Question":
-    buildQuestion(function(doc){
+    case "Next Question":    
       res.json({
-        "fulfillmentText": doc
+        "fulfillmentText": "here is your text"
       }); 
-    })    
+    
     
 //       res.json({
 //         "fulfillmentText": "",
