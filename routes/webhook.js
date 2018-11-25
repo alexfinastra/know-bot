@@ -30,12 +30,12 @@ router.post('/', function(req, res, next) {
       })
       break;
     case "Next Question":
-      buildQuestion(req, function(req, q){        
+      buildQuestion(function(q){        
         res.json({
           "fulfillmentText": doc["question"],
           "outputContexts": [
             {
-              "name": req.body.outputContexts[0].name,
+              "name": "",
               "lifespanCount": 500,
               "parameters": {
                 "email": "alex.perman@gmail.com"
@@ -69,7 +69,7 @@ function buildQuestion(req, cb){
     if (err) throw err;
     var limit = result.length-1;    
     doc = result[Math.floor(Math.random() * (limit))];
-    cb(req, doc)
+    cb(doc)
   });
 }
 
