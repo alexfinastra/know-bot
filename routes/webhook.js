@@ -30,7 +30,7 @@ router.post('/', function(req, res, next) {
       })
       break;
     case "Next Question":
-      buildQuestion(function(q){        
+      buildQuestion(function(doc){        
         res.json({
           "fulfillmentText": doc["question"],
           "outputContexts": [
@@ -65,11 +65,11 @@ router.post('/', function(req, res, next) {
 module.exports = router;
 
 function buildQuestion(cb){
-   db.collection(BUSINESSGUIDES_COLLECTION).find({}).toArray(function(err, result, cb) {
+   db.collection(BUSINESSGUIDES_COLLECTION).find({}).toArray(function(err, result) {
     if (err) throw err;
     var limit = result.length-1;    
     doc = result[Math.floor(Math.random() * (limit))];
-    cb(doc)
+    cb(doc);
   });
 }
 
