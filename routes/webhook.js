@@ -28,7 +28,7 @@ router.post('/', function(req, res, next) {
       });
       break;
     case "Business Guide - no":
-      text =  (session_store.correct_answer == "no") ? "The answer is correct." : "You are missed."
+      text =  (session_store.correct_answer == "yes") ? "The answer is correct." : "You are missed."
       res.json({
         "fulfillmentText": text
       });
@@ -40,7 +40,18 @@ router.post('/', function(req, res, next) {
           "fulfillmentText": "Thank you."
         });
       })
-
+      break;
+    case "Next Question":
+      text =  (session_store.correct_answer == "no") ? "The answer is correct." : "You are missed."
+      res.json({
+        "fulfillmentText": text,
+        "followupEventInput": {
+          "name": "success_event",
+          "parameters": {          
+          },
+          "languageCode": "en-US"
+        }
+      });
       break;
   }    
 });
