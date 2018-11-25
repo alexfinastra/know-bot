@@ -112,7 +112,7 @@ function replyWithDefinition(opts, res){
     case "base currency":
       def = "The currency in which the bank maintains its accounts and the first currency quoted in a currency pair. It is typically the local currency.";
       break;
-    case "bank bdentifier":
+    case "bank identifier":
       def = "ISO 9362 (also known as BIC code or SWIFT code) is a standard format of Bank Identifier Codes approved by the International Organization for Standardization. It is the unique identification code of a particular bank";
       break;
     case "suspense account":
@@ -125,7 +125,7 @@ function replyWithDefinition(opts, res){
       def = "Member ID for the MOP selected from the Parties Data Search window. After selection, value of BIC/BEI, ABA or CP ID, is shown based on the Member Type.";
       break;
     default: 
-      def = "Sorry, for my incompetentce. Will turn to my master. Wait a while and the answer will be on your way."
+      def = "Sorry, for my incompetentce. Will speack with my master. Wait a while and the answer will be on your way."
       break;
   }
 
