@@ -28,19 +28,14 @@ router.post('/', function(req, res, next) {
       break;
     case "Next Question":    
       res.json({
-        "fulfillmentText": "here is your text"
-      }); 
-    
-    
-//       res.json({
-//         "fulfillmentText": "",
-//         "followupEventInput": {
-//           "name": "success_event",
-//           "parameters": {          
-//           },
-//           "languageCode": "en-US"
-//         }
-//       });
+        "fulfillmentText": "",
+        "followupEventInput": {
+          "name": "success_event",
+          "parameters": {          
+          },
+          "languageCode": "en-US"
+        }
+      });
       break;
   }    
 });
