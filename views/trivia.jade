@@ -1,15 +1,4 @@
-doctype html
-html(lang='en')
-  head
-    meta(charset='utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
-    meta(name='description', content='')
-    meta(name='author', content='')
-    link(rel='icon', href='../../../../favicon.ico')
-    title Are you a GPP geek?
-    link(rel='stylesheet', href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ", crossorigin="anonymous")     
-    link(href="https://fonts.googleapis.com/css?family=Alfa+Slab+One", rel="stylesheet")
-    link(rel='stylesheet', href='/stylesheets/login.css')  
-    script(src="/javascripts/jquery-3.2.1.min.js")  
-  body.text-center
-    iframe(allow='microphone;', width='100%', height='100%', src='https://console.dialogflow.com/api-client/demo/embedded/4cc2ba0e-7020-4060-88ab-50ab871455f5')
+extends layout
+
+block content
+  iframe.mt-1(allow='microphone;', width='100%', height='100%', src='https://console.dialogflow.com/api-client/demo/embedded/4cc2ba0e-7020-4060-88ab-50ab871455f5')

@@ -1,23 +1,16 @@
 doctype html
-html(lang="en")
+html(lang='en')
   head
-    title= title 
-    meta(http-equiv="X-UA-Compatible", content="IE=edge")   
-    link(rel="stylesheet", href="/stylesheets/bootstrap.css")
-    link(rel='stylesheet', href="https://use.fontawesome.com/releases/v5.4.1/css/all.css", integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz", crossorigin="anonymous")
-    link(rel='stylesheet', href='/stylesheets/style.css') 
-    link(rel='stylesheet', href='/stylesheets/style3.css')
-    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Spicy+Rice')
-    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Ubuntu:700')
-    script(src="/javascripts/jquery-3.2.1.min.js")
-    script(src="/javascripts/popper.min.js")
-    script(src="/javascripts/bootstrap.js")
-    script(src="/javascripts/bootstrap-filestyle.min.js")
-    script(src="/javascripts/simpleUpload.min.js")
-    script(src='/javascripts/app.js')
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    title Are you a GPP geek?
+    link(rel='stylesheet', href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ", crossorigin="anonymous")     
+    link(href="https://fonts.googleapis.com/css?family=Alfa+Slab+One", rel="stylesheet")
+    link(rel='stylesheet', href='/stylesheets/login.css')  
+    script(src="/javascripts/jquery-3.2.1.min.js")       
   body
-    .wrapper      
-      #content
-        block content
-      
+    include nav
+    block content
       

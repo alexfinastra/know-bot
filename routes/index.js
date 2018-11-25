@@ -47,6 +47,10 @@ router.get('/resend', function(req, res, next){
 });
 
 router.get('/trivia', function(req, res, next){
+	res.render('trivia');	
+});
+
+router.get('/trivia_registration', function(req, res, next){
 	if( session_store == undefined){
 		res.redirect('/login');
 	} else {
