@@ -31,17 +31,9 @@ router.post('/', function(req, res, next) {
       break;
     case "Next Question":
       buildQuestion(function(doc){        
+        console.log("Question is in callback " + JSON.stringify(doc));
         res.json({
-          "fulfillmentText": doc["question"],
-          "outputContexts": [
-            {
-              "name": "",
-              "lifespanCount": 500,
-              "parameters": {
-                "email": "alex.perman@gmail.com"
-              }
-            }
-          ],
+          "fulfillmentText": doc["question"]
         });
       }); 
       break;
