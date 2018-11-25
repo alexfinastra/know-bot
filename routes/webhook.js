@@ -17,7 +17,10 @@ router.post('/', function(req, res, next) {
   switch (req.body.queryResult["intent"]["displayName"]){
     case "New Office":
       sendScriptsByMail(req.body.queryResult.parameters, res)
-      break;    
+      break; 
+    case "What Is":
+      replyWithDefinition(req.body.queryResult.parameters, res)
+      break;   
     case "GetEmail":
       session_store.email = req.body.queryResult.parameters.email;
       getUser(session_store["email"], function(user){
@@ -102,4 +105,33 @@ function sendScriptsByMail(opts, res){
         }); 
     }
   });
+}
+
+function replyWithDefinition(opts, res){
+  var def = ""
+  switch opts["WhatIsTopic"] {
+    case "Base currency" :
+      def = "The currency in which the bank maintains its accounts and the first currency
+quoted in a currency pair. It is typically the local currency."
+      break;
+    case "Bank Identifier" :
+      def = "ISO 9362 (also known as BIC code or SWIFT code) is a standard format of Bank Identifier Codes approved by the International Organization for Standardization. It is the unique identification code of a particular bank"
+      break;
+    case "Suspense Account" :
+      def = "Specifies the account to which the money willbe moved for the temprorary time, aka washing account"
+      break;
+    case "Settlement Account" :
+      def = "Select the Settlement Account that the local bank uses at the MOP for payments exchanged with this MOP"
+      break;
+    case "Membership ID" :
+      def = "Member ID for the MOP selected from the Parties Data Search window. After selection, value of BIC/BEI, ABA or CP ID, is shown based on the Member Type."
+      break;
+    default: 
+      def = "Sorry, but I do not know , will turn to SME and come back to you later."
+      break;
+  }
+
+  res.json({
+          "fulfillmentText": def
+        });
 }
