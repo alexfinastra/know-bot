@@ -30,15 +30,19 @@ router.post('/', function(req, res, next) {
       })
       break;
     case "Next Question":    
-      res.json({
-        "fulfillmentText": "",
-        "followupEventInput": {
-          "name": "success_event",
-          "parameters": {          
-          },
-          "languageCode": "en-US"
-        }
-      });
+    res.json({
+      "fulfillmentText": "Heres the next question for you dummy!"
+    });
+
+//       res.json({
+//         "fulfillmentText": "",
+//         "followupEventInput": {
+//           "name": "success_event",
+//           "parameters": {          
+//           },
+//           "languageCode": "en-US"
+//         }
+//       });
       break;
   }    
 });
