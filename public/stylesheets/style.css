@@ -1,4 +1,8 @@
-body {
-  min-height: 75rem;
-  padding-top: 6.5rem;
-}
+.bg-image {
+    background-image: url(/img/finastra_ribbon.png);
+    background-size: contain;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    padding-bottom: 8rem;
+  }
+
