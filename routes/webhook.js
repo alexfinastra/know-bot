@@ -27,16 +27,21 @@ router.post('/', function(req, res, next) {
       })
       break;
     case "Next Question":
-      //text =  (session_store.correct_answer == "no") ? "The answer is correct." : "You are missed."
+    buildQuestion(function(doc){
       res.json({
-        "fulfillmentText": "test Text",
-        "followupEventInput": {
-          "name": "success_event",
-          "parameters": {          
-          },
-          "languageCode": "en-US"
-        }
-      });
+        "fulfillmentText": doc
+      }); 
+    })    
+    
+//       res.json({
+//         "fulfillmentText": "",
+//         "followupEventInput": {
+//           "name": "success_event",
+//           "parameters": {          
+//           },
+//           "languageCode": "en-US"
+//         }
+//       });
       break;
   }    
 });
@@ -102,4 +107,6 @@ function sendScriptsByMail(opts, res){
         }); 
     }
   });
+
+  
 }
