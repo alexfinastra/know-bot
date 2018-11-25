@@ -140,8 +140,8 @@ function replyWithDefinition(opts, res){
   res.json({
           "fulfillmentText": def
         });
-
-  function checkifCorrect (answer) {
-    return true;
-  }
+ 
+}
+function checkifCorrect (answer) {
+  return true;
 }
