@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var BUSINESSGUIDES_COLLECTION = "businessguides";
+var BUSINESSGUIDES_COLLECTION = "Trivia";
 var USERS_COLLECTION = "users";
 var session_store;
 var nodemailer = require('nodemailer');
@@ -19,7 +19,7 @@ router.post('/', function(req, res, next) {
       sendScriptsByMail(req.body.queryResult.parameters, res)
       break; 
     case "What Is":
-      replyWithDefinition(req.body.queryResult.parameters, res)
+      replyWithDefinition(req.body.queryResult.parameters, res) 
       break;   
     case "GetEmail":
       session_store.email = req.body.queryResult.parameters.email;
@@ -29,25 +29,35 @@ router.post('/', function(req, res, next) {
         });
       })
       break;
-    case "Next Question":    
-    res.json({
-      "fulfillmentText": "Heres the next question for you dummy!"
-    });
+    case "Next Question":
+      buildQuestion(function(q){        
+        res.json({
+          "fulfillmentText": doc["question"],
+          "outputContexts": [
+            {
+              "name": req.body.outputContexts[0].name,
+              "lifespanCount": 500,
+              "parameters": {
+                "email": "alex.perman@gmail.com"
+              }
+            }
+          ],
+        });
+      }); 
       break;
-
     case "Next Question - yes":    
-    let correct = checkifCorrect(answer);
-    if (correct) {
-    res.json({
-        "fulfillmentText": "Correct Answer!"
-      });
-
-    } else {
+      let correct = checkifCorrect(answer);
+      if (correct) {
       res.json({
-        "fulfillmentText": "You are wrong, dummy! the correct answer is:"
-      });
-    }
-        break;
+          "fulfillmentText": "Correct Answer!"
+        });
+
+      } else {
+        res.json({
+          "fulfillmentText": "You are wrong, dummy! the correct answer is:"
+        });
+      }
+      break;
   }    
 });
 
@@ -57,17 +67,9 @@ module.exports = router;
 function buildQuestion(cb){
    db.collection(BUSINESSGUIDES_COLLECTION).find({}).toArray(function(err, result) {
     if (err) throw err;
-    var limit = result.length-1;
-    qoutes=[];
-    var doc;
-    while(qoutes.length == 0){
-      doc = result[Math.floor(Math.random() * (limit))]
-      qoutes = doc.content.filter(function(p){return p.indexOf(doc.section) > -1 })
-    }
-    random_scope = result[Math.floor(Math.random() * (limit))].scope;
-    session_store.correct_answer = doc.scope == random_scope ? "yes" : "no";
-    q = "Does the qoute " + qoutes[0] + " is taken from " + random_scope + " business guide?"
-    cb(q)
+    var limit = result.length-1;    
+    doc = result[Math.floor(Math.random() * (limit))];
+    cb(doc)
   });
 }
 
@@ -115,7 +117,7 @@ function sendScriptsByMail(opts, res){
 }
 
 function replyWithDefinition(opts, res){
-  var def = ""
+  var def = ""  
   switch (opts["WhatIsTopic"].toLowerCase()) {
     case "base currency":
       def = "The currency in which the bank maintains its accounts and the first currency quoted in a currency pair. It is typically the local currency.";

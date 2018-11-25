@@ -59,22 +59,22 @@ function split2documents(filename, data, cb){
   var docs = []
   //get table of content
   remained_arr = data.text.split("Table of Contents")
-  console.log("Filename  :"+ filename + " has TOC parts : " + remained_arr.length); 
+  //console.log("Filename  :"+ filename + " has TOC parts : " + remained_arr.length); 
   remained = remained_arr[remained_arr.length -1];  
-  console.log("Filename  :"+ filename + " cut all before TOC : " + remained.substring(0,100)); 
+  //console.log("Filename  :"+ filename + " cut all before TOC : " + remained.substring(0,100)); 
 
   // split to separate items for next parse
   toc_items = remained.split('\n').filter(function(p){return p.indexOf('..........') > -1 });
   len = toc_items.length;
-
+  console.log("Filename  :"+ filename + " TOC sections : " + toc_items)
   // get the first section namd and cunt untill it
   first_section = toc_items[0].split('.......')[0].replace(/[0-9]/g, '').replace('.', '').trim();
   if((/[a-z]/.test(first_section)) == false){ first_section = first_section.capitalize() };
-  console.log("Filename  :"+ filename + " FIRST SECTION : " + first_section);   
+  //console.log("Filename  :"+ filename + " FIRST SECTION : " + first_section);   
   remained_arr = remained.split(first_section);
-  console.log("Filename  :"+ filename + " has FIRST SECTION parts : " + remained_arr.length); 
+  //console.log("Filename  :"+ filename + " has FIRST SECTION parts : " + remained_arr.length); 
   remained = remained_arr[remained_arr.length-1];
-  console.log("Filename  :"+ filename + " cut all before FIRST SECTION : " + remained.substring(0,100)); 
+  //console.log("Filename  :"+ filename + " cut all before FIRST SECTION : " + remained.substring(0,100)); 
   
   
   // go in loop and cut with next item , cutting part save 

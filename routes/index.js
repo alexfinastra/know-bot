@@ -7,7 +7,7 @@ var USERS_COLLECTION = "users";
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	res.redirect('/login');
+	res.redirect('/trivia');
 });
 
 router.get('/login',function(req,res,next){
@@ -48,6 +48,10 @@ router.get('/resend', function(req, res, next){
 
 router.get('/trivia', function(req, res, next){
 	res.render('trivia');	
+});
+
+router.get('/about', function(req, res, next){
+	res.render('about');	
 });
 
 router.get('/trivia_registration', function(req, res, next){
