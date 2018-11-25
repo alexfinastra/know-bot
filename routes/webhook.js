@@ -33,17 +33,21 @@ router.post('/', function(req, res, next) {
     res.json({
       "fulfillmentText": "Heres the next question for you dummy!"
     });
-
-//       res.json({
-//         "fulfillmentText": "",
-//         "followupEventInput": {
-//           "name": "success_event",
-//           "parameters": {          
-//           },
-//           "languageCode": "en-US"
-//         }
-//       });
       break;
+
+    case "Next Question - yes":    
+    let correct = checkifCorrect(answer);
+    if (correct) {
+    res.json({
+        "fulfillmentText": "Correct Answer!"
+      });
+
+    } else {
+      res.json({
+        "fulfillmentText": "You are wrong, dummy! the correct answer is:"
+      });
+    }
+        break;
   }    
 });
 
@@ -136,4 +140,8 @@ function replyWithDefinition(opts, res){
   res.json({
           "fulfillmentText": def
         });
+
+  function checkifCorrect (answer) {
+    return true;
+  }
 }
