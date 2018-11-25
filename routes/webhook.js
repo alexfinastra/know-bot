@@ -29,10 +29,9 @@ router.post('/', function(req, res, next) {
         });
       })
       break;
-    case "Next Question":
-      //text =  (session_store.correct_answer == "no") ? "The answer is correct." : "You are missed."
+    case "Next Question":    
       res.json({
-        "fulfillmentText": "test Text",
+        "fulfillmentText": "",
         "followupEventInput": {
           "name": "success_event",
           "parameters": {          
