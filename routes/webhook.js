@@ -19,10 +19,10 @@ router.post('/', function(req, res, next) {
       sendScriptsByMail(req.body.queryResult.parameters, res)
       break; 
     case "What Is":
-      replyWithDefinition(req.body, res) 
+      replyWithDefinition(req.body.queryResult, res) 
       break; 
     case "FeatureCheck":
-      replyWithDefinition(req.body, res) 
+      replyWithDefinition(req.body.queryResult, res) 
       break;  
   }    
 });
