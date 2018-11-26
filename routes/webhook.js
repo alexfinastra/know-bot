@@ -101,8 +101,9 @@ function getDocument(opts, cb){
 }
 
 function addDocument(opt, cb){ 
- var index = opt["intent"]["displayName"] + "^" + opt["parameters"]["WhatIsTopic"];
- var new_doc = {"index":  index, "intent": opt["intent"], "questions": [opt["queryText"]], "parameters": opt["parameters"], "answer": ""};
+  console.log("addDocument  " + JSON.stringify(opt))
+ var sindex = opt["intent"]["displayName"] + "^" + opt["parameters"]["WhatIsTopic"];
+ var new_doc = {"searchind":  sindex, "intent": opt["intent"], "questions": opt["queryText"], "parameters": opt["parameters"], "answer": ""};
  console.log(" New Doc " + new_doc)
   db.collection(USERS_COLLECTION).insertOne(new_doc, function(err, doc) {
     if (err) {
