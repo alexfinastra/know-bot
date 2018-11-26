@@ -32,7 +32,7 @@ module.exports = router;
 function replyWithDefinition(opts, res){  
   getDocument(opts, function(doc){
     if( doc == undefined || doc == null){
-        addDocument(opt, function(){
+        addDocument(opts, function(){
           res.json({
             "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you by email."
           });
