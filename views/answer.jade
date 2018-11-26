@@ -1,8 +1,22 @@
 extends layout
 
-block content
-  .text-center    
-    img.mb-3(src='img/geek.png', alt='', width='72', height='72')
-    h3.mb-1.font-weight-normal(style="font-family: 'Alfa Slab One', cursive;;font-size: 3rem;") GPP Trivia
-    p.p-3 GPP quiz competition consists of questions related to the GPP behavior, functionality and usage. Once the game starts, the host of that game will appear on your screen with a question. The question - along with the two potential answers - will pop up on your screen. You have to select an answer, and if you get it right, you'll move on to the next question. If you happen to answer all the questions correctly, you will win money. If not, you will lose, and then you can then exit out of the app for the day.
-    p.mt-5.mb-3.text-muted © 2018
+block content 
+  .col-md-8
+    form.mt-5.ml-2.p-5(action="/answer", method="post")
+      .form-group.row
+        input#document_id(type="hidden", name="document_id", value=id)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='question') 
+          b Question
+        .col-sm-10
+          textarea#question.form-control(rows="3", name="question", disabled)= questions
+      .form-group.row
+        label.col-sm-2.col-form-label(for='answer') 
+          b Answer
+        .col-sm-10
+          textarea#answer.form-control(rows="6", name="answer")     
+      .form-group.row
+        .col-sm-12
+          button.btn.btn-primary.float-right.mt-1(type='submit') Submit
+  .col-md-4.mt-5    
+    img.mt-5(src="/img/question-and-answer.jpg", width="90%")

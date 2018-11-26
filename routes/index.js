@@ -2,7 +2,10 @@ var express = require('express');
 var router = express.Router();
 var session_store;
 var nodemailer = require('nodemailer');
+var mongodb = require("mongodb");
+var ObjectID = mongodb.ObjectID;
 
+var QUESTIONS_COLLECTION = "questions";
 var USERS_COLLECTION = "users";
 
 /* GET home page. */
@@ -47,11 +50,36 @@ router.get('/resend', function(req, res, next){
 });
 
 router.get('/ask', function(req, res, next){
-	res.render('ask');	
+	res.render('ask', {title: "You won't know if you don't ask"});	
 });
 
-router.get('/answer', function(req, res, next){
-	res.render('answer');	
+router.get('/answer/:id', function(req, res, next){
+	db.collection(QUESTIONS_COLLECTION).findOne({ _id: new ObjectID(req.params.id) }, function(err, doc) {
+    if (err) {
+      handleError(res, err.message, "Failed to get document");
+    } else {
+    	q = (doc == null) ? "Question is not found" : doc.questions.join("\n")
+      res.render('answer',{title: "Single answer to many questions", questions: q, id: req.params.id});
+    }
+  });
+});
+
+router.post('/answer',function(req, res, next){	
+		id = req.sanitize('document_id').escape().trim();			
+		db.collection(QUESTIONS_COLLECTION).findOne({ _id: new ObjectID(id) }, function(err, updateDoc) {
+    if (err) {
+      handleError(res, err.message, "Failed to get document");
+    } else {
+    	answer = req.sanitize('answer').escape().trim();
+    	db.collection(QUESTIONS_COLLECTION).updateOne({_id: new ObjectID(id)}, {$set: {"answer": answer}},{ upsert: true }, function(err, doc) {
+		    if (err) {
+		      handleError(res, err.message, "Failed to update document");
+		    } else {
+		      res.redirect('ask');
+		    }
+		  });
+    }
+  });
 });
 
 router.get('/trivia_registration', function(req, res, next){
@@ -164,6 +192,12 @@ router.get('/logout', function(req, res){
 
 
 module.exports = router;
+
+
+function handleError(res, reason, message, code) {
+  console.log("ERROR: " + reason);
+  res.status(code || 500).json({"error": message});
+}
 
 var transporter = nodemailer.createTransport({
   service: 'gmail',

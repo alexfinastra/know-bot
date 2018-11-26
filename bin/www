@@ -9,12 +9,10 @@ const path = require('path');
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
-
 let log = console.log.bind(console)
 
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-
 
 mongodb.MongoClient.connect(process.env.MONGODB_URI || "mongodb://heroku_8966vzgn:3q2klt6c8a0rrmvkuh4h2bnpa9@ds235180.mlab.com:35180/heroku_8966vzgn", function (err, client) {
   if (err) {
