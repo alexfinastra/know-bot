@@ -20,6 +20,9 @@ router.post('/', function(req, res, next) {
       break; 
     case "What Is":
       replyWithDefinition(req.body, res) 
+      break; 
+    case "FeatureCheck":
+      replyWithDefinition(req.body, res) 
       break;  
   }    
 });
