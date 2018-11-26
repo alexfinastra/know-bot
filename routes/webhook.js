@@ -91,7 +91,7 @@ function replyWithDefinition(opts, res){
 //
 function getDocument(opts, cb){
   console.log("parameters are " + JSON.stringify(opts) + "db " + db);
-  var searchind = opt["intent"]["name"] + "^" + opt["parameters"]["WhatIsTopic"];
+  var searchind = opts["intent"]["name"] + "^" + opts["parameters"]["WhatIsTopic"];
   console.log("searchind are " + searchind);
   db.collection(QUESTIONS_COLLECTION).findOne({"searchind": searchind}, function(err, doc) {
     console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
