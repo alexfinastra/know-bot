@@ -30,7 +30,7 @@ router.post('/', function(req, res, next) {
 module.exports = router;
 
 function replyWithDefinition(opts, res){  
-  getDocument(opts, function(doc){
+  getDocument(opts, function(opts, doc){
     if( doc == undefined || doc == null){
         addDocument(opts, function(){
           res.json({
@@ -96,7 +96,7 @@ function getDocument(opts, cb){
   db.collection(QUESTIONS_COLLECTION).findOne({"searchind": searchind}, function(err, doc) {
     console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
     if (err == null) {
-      cb(doc);
+      cb(opts, doc);
     } else {
       return null;
     }
