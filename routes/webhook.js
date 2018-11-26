@@ -19,7 +19,7 @@ router.post('/', function(req, res, next) {
       sendScriptsByMail(req.body.queryResult.parameters, res)
       break; 
     case "What Is":
-      replyWithDefinition(req.body.queryResult.parameters, res) 
+      replyWithDefinition(req.body, res) 
       break;  
   }    
 });
