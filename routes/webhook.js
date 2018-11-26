@@ -90,7 +90,7 @@ function getDocument(opts, cb){
   db.collection(QUESTIONS_COLLECTION).findOne({"searchind": searchind}, function(err, doc) {
     console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
     if (err == null) {
-      console.log("OPts " = JSON.stringify(opts))
+      console.log("OPts " + JSON.stringify(opts))
       if(doc == null){
         addDocument(opts, function(){ cb();})
       }      
