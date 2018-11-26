@@ -78,7 +78,7 @@ function replyWithDefinition(opts, res){
           "fulfillmentText": def
         });*/
  
-
+   
 
 // Document structure
 // {
@@ -91,15 +91,15 @@ function replyWithDefinition(opts, res){
 //
 function getDocument(opts, cb){
   console.log("parameters are " + JSON.stringify(opts));
-  db.collection(QUESTIONS_COLLECTION).findOne({
+  db.collection(QUESTIONS_COLLECTION).find({
      $and: [
             { "intent": opt["intent"] },
             { "parameters": opt["parameters"]  }
           ]
-      }, function(err, doc) {
-    console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
+      }, function(err, results) {
+    console.log("Check if user exists :" + err + " result :" + JSON.stringify(results[0]));
     if (err == null) {
-      cb(doc);
+      cb(results[0]);
     } else {
       return null;
     }
