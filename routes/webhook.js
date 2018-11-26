@@ -30,14 +30,8 @@ router.post('/', function(req, res, next) {
 module.exports = router;
 
 function replyWithDefinition(opts, res){  
-  getDocument(opts, function(opts, doc){
-    if( doc == undefined || doc == null){
-        addDocument(opts, function(){
-          res.json({
-            "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you by email."
-          });
-        })
-    } else {
+  getDocument(opts, function(doc){
+    if( doc != undefined && doc != null){        
       if(doc.answer.length > 0 ){
         res.json({
           "fulfillmentText": doc.answer
@@ -91,12 +85,15 @@ function replyWithDefinition(opts, res){
 //
 function getDocument(opts, cb){
   console.log("parameters are " + JSON.stringify(opts) + "db " + db);
-  var searchind = opts["intent"]["name"] + "^" + opts["parameters"]["WhatIsTopic"];
+  var searchind = opts["intent"]["displayName"] + "^" + opts["parameters"]["WhatIsTopic"];
   console.log("searchind are " + searchind);
   db.collection(QUESTIONS_COLLECTION).findOne({"searchind": searchind}, function(err, doc) {
     console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
     if (err == null) {
-      cb(opts, doc);
+      console.log("OPts " = JSON.stringify(opts))
+      if(doc == null){
+        addDocument(opts, function(){ cb();})
+      }      
     } else {
       return null;
     }
@@ -104,7 +101,7 @@ function getDocument(opts, cb){
 }
 
 function addDocument(opt, cb){ 
- var index = opt["intent"]["name"] + "^" + opt["parameters"]["WhatIsTopic"];
+ var index = opt["intent"]["displayName"] + "^" + opt["parameters"]["WhatIsTopic"];
  var new_doc = {"index":  index, "intent": opt["intent"], "questions": [opt["queryResult"]["queryText"]], "parameters": opt["parameters"], "answer": ""};
   db.collection(USERS_COLLECTION).insertOne(new_doc, function(err, doc) {
     if (err) {
