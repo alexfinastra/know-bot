@@ -87,7 +87,7 @@ function replyWithDefinition(opts, res){
 //   answer : ""
 //
 function getDocument(opts, cb){
-  console.log("parameters are " + opts);
+  console.log("parameters are " + JSON.stringify(opts));
   db.collection(QUESTIONS_COLLECTION).findOne({
      $and: [
             { "intent": opt["intent"] },
