@@ -90,11 +90,11 @@ function replyWithDefinition(opts, res){
 //   answer : ""
 //
 function getDocument(opts, cb){
-  console.log("parameters are " + JSON.stringify(opts));
+  console.log("parameters are " + JSON.stringify(opts) + "db " + db);
   db.collection(QUESTIONS_COLLECTION).find({
      $and: [
-            { "intent": opt["intent"] },
-            { "parameters": opt["parameters"]  }
+            { "intent": opt["intent"]["name"] },
+            { "parameters": opt["parameters"]["WhatIsTopic"]  }
           ]
       }, function(err, results) {
     console.log("Check if user exists :" + err + " result :" + JSON.stringify(results[0]));
