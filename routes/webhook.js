@@ -91,8 +91,9 @@ function replyWithDefinition(opts, res){
 //
 function getDocument(opts, cb){
   console.log("parameters are " + JSON.stringify(opts) + "db " + db);
-  var index = opt["intent"]["name"] + "" + opt["parameters"]["WhatIsTopic"];
-  db.collection(QUESTIONS_COLLECTION).findOne({"index": index}, function(err, doc) {
+  var searchind = opt["intent"]["name"] + "^" + opt["parameters"]["WhatIsTopic"];
+  console.log("searchind are " + searchind);
+  db.collection(QUESTIONS_COLLECTION).findOne({"searchind": searchind}, function(err, doc) {
     console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
     if (err == null) {
       cb(doc);
@@ -103,7 +104,7 @@ function getDocument(opts, cb){
 }
 
 function addDocument(opt, cb){ 
- var index = opt["intent"]["name"] + "" + opt["parameters"]["WhatIsTopic"];
+ var index = opt["intent"]["name"] + "^" + opt["parameters"]["WhatIsTopic"];
  var new_doc = {"index":  index, "intent": opt["intent"], "questions": [opt.queryResult.queryText], "parameters": opt["parameters"], "answer": ""};
   db.collection(USERS_COLLECTION).insertOne(new_doc, function(err, doc) {
     if (err) {
