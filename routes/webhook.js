@@ -19,17 +19,17 @@ router.post('/', function(req, res, next) {
       sendScriptsByMail(req.body.queryResult.parameters, res)
       break; 
     case "What Is":
-      replyWithDefinition(req.body.queryResult.parameters, res) 
+      replyWithDefinition(req.body.queryResult, res) 
       break; 
     case "FeatureCheck":
-      replyWithDefinition(req.body.queryResult.parameters, res) 
+      replyWithDefinition(req.body.queryResult, res) 
       break;  
   }    
 });
 
 module.exports = router;
 
-function replyWithDefinition(opts, res){
+function replyWithDefinitionOld(opts, res){
   var def = ""  
   switch (opts["WhatIsTopic"].toLowerCase()) {
     case "base currency":
@@ -59,7 +59,7 @@ function replyWithDefinition(opts, res){
 }
 
 
-function replyWithDefinitionNew(opts, res){  
+function replyWithDefinition(opts, res){  
   getDocument(opts, function(doc){
     if( doc != undefined && doc != null){        
       if(doc.answer.length > 0 ){
@@ -106,12 +106,17 @@ function replyWithDefinitionNew(opts, res){
 
 // Document structure
 // {
-//   intent : intent.name
-//   questions: [queryResult.queryText, ],
-//   parameters : {
-//      "key" : "value"
-//   }
-//   answer : ""
+//   "searchind": "What Is^membership id",
+//   "intent" : {  
+//      "name": "projects/drive-91f16/agent/intents/2d9059a4-aa07-4453-8fb9-5995e97fd41f",
+//      "displayName": "What Is"
+//   },
+//   "questions": ["do you know what bank routing is?" ],
+//   "parameters" : {  
+//      "WhatIsTopic": "bank routing",
+//      "Result": ""
+//   },
+//   "answer" : ""
 //
 function getDocument(opts, cb){
   console.log("parameters are " + JSON.stringify(opts) + "db " + db);
@@ -135,7 +140,7 @@ function addDocument(opt, cb){
  var sindex = opt["intent"]["displayName"] + "^" + opt["parameters"]["WhatIsTopic"];
  var new_doc = {"searchind":  sindex, "intent": opt["intent"], "questions": [opt["queryText"]], "parameters": opt["parameters"], "answer": ""};
  console.log(" New Doc " + new_doc)
-  db.collection(USERS_COLLECTION).insertOne(new_doc, function(err, doc) {
+  db.collection(QUESTIONS_COLLECTION).insertOne(new_doc, function(err, doc) {
     if (err) {
       cb
     } else {
