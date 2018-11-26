@@ -7,7 +7,7 @@ var USERS_COLLECTION = "users";
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	res.redirect('/trivia');
+	res.redirect('/ask');
 });
 
 router.get('/login',function(req,res,next){
@@ -46,12 +46,12 @@ router.get('/resend', function(req, res, next){
 	}
 });
 
-router.get('/trivia', function(req, res, next){
-	res.render('trivia');	
+router.get('/ask', function(req, res, next){
+	res.render('ask');	
 });
 
-router.get('/about', function(req, res, next){
-	res.render('about');	
+router.get('/answer', function(req, res, next){
+	res.render('answer');	
 });
 
 router.get('/trivia_registration', function(req, res, next){
