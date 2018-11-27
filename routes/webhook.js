@@ -76,35 +76,6 @@ function replyWithDefinition(opts, res){
   })
 }
 
-/*
-  var def = ""  
-  switch (opts["WhatIsTopic"].toLowerCase()) {
-    case "base currency":
-      def = "The currency in which the bank maintains its accounts and the first currency quoted in a currency pair. It is typically the local currency.";
-      break;
-    case "bank identifier":
-      def = "ISO 9362 (also known as BIC code or SWIFT code) is a standard format of Bank Identifier Codes approved by the International Organization for Standardization. It is the unique identification code of a particular bank";
-      break;
-    case "suspense account":
-      def = "Specifies the account to which the money willbe moved for the temprorary time, aka washing account";
-      break;
-    case "settlement account":
-      def = "Select the Settlement Account that the local bank uses at the MOP for payments exchanged with this MOP";
-      break;
-    case "membership id":
-      def = "Member ID for the MOP selected from the Parties Data Search window. After selection, value of BIC/BEI, ABA or CP ID, is shown based on the Member Type.";
-      break;
-    default: 
-      def = "Sorry. Not sure about this one… will check with Oracle and get back to you by email."
-      break;
-  }
-
-  res.json({
-          "fulfillmentText": def
-        });*/
- 
-   
-
 // Document structure
 // {
 //   "searchind": "What Is^membership id",
@@ -129,7 +100,10 @@ function getDocument(opts, cb){
       console.log("OPts " + JSON.stringify(opts))
       if(doc == null){
         addDocument(opts, function(){ cb();})
-      }      
+      } else {
+        cb(doc);
+      }
+
     } else {
       return null;
     }
