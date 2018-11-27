@@ -148,7 +148,7 @@ function addDocument(opt, cb){
       // should be here Jedi selection
       sendMail({
         "email": "alexander.perman@finastra.com",
-        "url": "https://know-robot.herokuapp.com/answer/"+doc._id
+        "url": "https://know-robot.herokuapp.com/answer/" + ObjectId(doc._id).toString()
       }, cb);
     }
   });
