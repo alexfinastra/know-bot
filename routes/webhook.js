@@ -72,6 +72,10 @@ function replyWithDefinition(opts, res){
           "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you by email."
         });
       }
+    } else {
+      res.json({
+          "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you by email."
+        });
     }
   })
 }
@@ -99,7 +103,7 @@ function getDocument(opts, cb){
     if (err == null) {
       console.log("OPts " + JSON.stringify(opts))
       if(doc == null){
-        addDocument(opts, function(){ cb();})
+        addDocument(opts, function(){ cb(doc);})
       } else {
         cb(doc);
       }
