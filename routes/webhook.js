@@ -3,7 +3,7 @@ var router = express.Router();
 var QUESTIONS_COLLECTION = "questions";
 var session_store;
 var nodemailer = require('nodemailer');
-ar mongodb = require("mongodb");
+var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
 
 /* GET home page. */
