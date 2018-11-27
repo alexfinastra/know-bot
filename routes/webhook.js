@@ -69,12 +69,12 @@ function replyWithDefinition(opts, res){
         });
       } else {        
         res.json({
-          "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you by email."
+          "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you."
         });
       }
     } else {
       res.json({
-          "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you by email."
+          "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you."
         });
     }
   })
@@ -121,14 +121,15 @@ function addDocument(opt, cb){
  console.log(" New Doc " + new_doc)
   db.collection(QUESTIONS_COLLECTION).insertOne(new_doc, function(err, doc) {
     if (err) {
-      cb
+      cb(doc)
     } else {
       console.log("New document created " + doc.ops[0] );
       // should be here Jedi selection
       sendMail({
         "email": "alexander.perman@finastra.com",
         "url": "https://know-robot.herokuapp.com/answer/" + ObjectID(new_doc._id).toString()
-      }, cb);
+      });
+      cb(new_doc);
     }
   });
 }
@@ -146,7 +147,7 @@ function handleError(res, reason, message, code) {
   res.status(code || 500).json({"error": message});
 }
 
-function sendMail(opts, cb){
+function sendMail(opts){
   var mailOptions = {
     from: 'finastra.integration.team@gmail.com',
     to: opts["email"],
@@ -156,13 +157,9 @@ function sendMail(opts, cb){
 
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
-      console.log(error);
-       res.json({
-          "fulfillmentText": "Sorry , but the supplied data is incorrect please repat the procedure."
-        }); 
+      console.log('Email was not sent: ' + error);
     } else {
-      console.log('Email sent: ' + info.response);
-      cb 
+      console.log('Email sent: ' + info.response);       
     }
   });
 }
