@@ -5,7 +5,7 @@ var pdf = require('pdf-parse');
 var BUSINESSGUIDES_COLLECTION = "businessguides";
 
 router.get('/', function(req, res, next) {
-	res.send("OK !!!")   	
+	res.redirect('/documents/add/docs'); 	
 });
 
 router.get('/add/:source', function(req, res, next){ 
@@ -51,8 +51,93 @@ function readFiles(db, dirname, onFileContent, onError) {
   });
 }
 
+function verifyWord(item){
+  var v_item = item.replace(/\n/g,"").trim();
+  
+  if(v_item.indexOf('.') > -1){
+    it = v_item.replace(/\../g,"");
+    v_item  = (it.length > 0 && it != ".") ? v_item : "";
+  }
+
+  if(v_item.length > 0 ){
+     return v_item.toLowerCase();
+   } else {
+     return "";
+   }
+}
 
 function split2documents(filename, data, cb){ 
+  var docs = [];
+  var words_arr = data.text.split(' ');
+  var toc = [['table','of','contents']];  
+  var toc_ptrn_ind = 0;
+  var toc_word_ind = 0;
+  var text_arr = {};
+  var pattern_type = "";
+  var newEntry = true;
+
+  for (var i = 0; i < words_arr.length; i++) {
+    var word = verifyWord(words_arr[i])     
+    if(word.length > 0){
+      //console.log("Pattern " + toc[toc_ptrn_ind] + " ptrn index " + toc_ptrn_ind + " and word index "+toc_word_ind)
+      if(toc[toc_ptrn_ind] != undefined && word == toc[toc_ptrn_ind][toc_word_ind]){
+        //console.log("Pattern match " + word + " with pattern " + toc[toc_ptrn_ind][toc_word_ind])
+        toc_word_ind = toc_word_ind + 1        
+        pattern_type = ""
+
+        //completed pattern match next item is text
+        if(toc[toc_ptrn_ind][toc_word_ind] == undefined){          
+          pattern_type = toc[toc_ptrn_ind].join(' ');          
+          toc_ptrn_ind = toc_ptrn_ind + 1;
+          toc_word_ind = 0;
+          //console.log("Pattern --> " + pattern_type + " has following content : " + JSON.stringify(text_arr));          
+        }
+      } else {
+        if(toc_word_ind > 0){ 
+            text_arr = text_arr.concat(toc[toc_ptrn_ind].slice(0, toc_word_ind))
+            toc_word_ind = 0; 
+            pattern_type = toc[toc_ptrn_ind].join(' ');
+            //console.log("Reset index as not inline with pattern ->"+pattern_type);
+        } else {
+          if(pattern_type.length > 0){
+            if(pattern_type == 'table of contents'){              
+              var isNumber = /^\d+$/.test(word);
+              //console.log("Word " + word + " newEntry " + newEntry + " and isNumber " + isNumber + " pattern_type "+pattern_type)
+              if(!isNumber) {                
+                if(newEntry){
+                  if ((word.indexOf('appendix') == -1) && (word.indexOf('.') == -1)){                  
+                    pattern_type = "";
+                  } else {
+                    toc.push([]);
+                    toc[toc.length-1].push(word)
+                    newEntry = false  
+                  }
+                } else {
+                  toc[toc.length-1].push(word)  
+                }
+              } else{
+                if(newEntry){
+                  toc.push([]);
+                  toc[toc.length-1].push(word)
+                  newEntry = false
+                } else {
+                  newEntry = true
+                }  
+              }
+            } else{
+              //console.log("Pattern -->" +pattern_type + " collect word : " + word )
+              if(text_arr[pattern_type] == undefined){ text_arr[pattern_type] = [] } ;
+              text_arr[pattern_type].push(word);              
+            }
+          }
+        }
+      }
+    }  
+  }
+  console.log("Collected text " + JSON.stringify(text_arr) );
+}
+
+function split2documents_old(filename, data, cb){ 
   //console.log("\n\n\n************************************************")
   //console.log("File name: "  + filename); 
       
@@ -147,4 +232,5 @@ String.prototype.capitalize = function() {
   })
   return res.join(" ");
 }
+
 
