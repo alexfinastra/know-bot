@@ -15,50 +15,80 @@ router.post('/', function(req, res, next) {
   console.log("******************************");
   console.log("webhook request :" + JSON.stringify(req.body.queryResult));
   console.log("try :" + JSON.stringify(req.session));
-  switch (req.body.queryResult["intent"]["displayName"]){
-    case "New Office":
+  console.log("try body :" + JSON.stringify(req.body.session));
+  switch (req.body.queryResult["intent"]["displayName"].toLowerCase()){
+    case "new office":
       sendScriptsByMail(req.body.queryResult.parameters, res)
       break; 
-    case "What Is":
+    case "what is":
       replyWithDefinition(req.body.queryResult, res) 
       break; 
-    case "FeatureCheck":
-      replyWithDefinition(req.body.queryResult, res) 
+    case "featurefheck":
+      replyWithFeature(req.body.queryResult, res) 
       break;  
+    case "business guide":
+      replyWithBusinessGuide(req.body.queryResult, res)
+      break;
   }    
 });
 
 module.exports = router;
 
-function replyWithDefinitionOld(opts, res){
-  var def = ""  
-  switch (opts["WhatIsTopic"].toLowerCase()) {
-    case "base currency":
-      def = "The currency in which the bank maintains its accounts and the first currency quoted in a currency pair. It is typically the local currency.";
-      break;
-    case "bank identifier":
-      def = "ISO 9362 (also known as BIC code or SWIFT code) is a standard format of Bank Identifier Codes approved by the International Organization for Standardization. It is the unique identification code of a particular bank";
-      break;
-    case "suspense account":
-      def = "Specifies the account to which the money willbe moved for the temprorary time, aka washing account";
-      break;
-    case "settlement account":
-      def = "Select the Settlement Account that the local bank uses at the MOP for payments exchanged with this MOP";
-      break;
-    case "membership id":
-      def = "Member ID for the MOP selected from the Parties Data Search window. After selection, value of BIC/BEI, ABA or CP ID, is shown based on the Member Type.";
-      break;
-    default: 
-      def = "Sorry. Not sure about this one… will check with Oracle and get back to you by email."
-      break;
-  }
-
-  res.json({
-          "fulfillmentText": def
+function replyWithBusinessGuide(opts, res){  
+  getBGDocument(opts, function(doc){
+    if( doc != undefined && doc != null){        
+      if(doc.context.length > 0 ){
+        answer = "..." + doc.context.slice(0,50) + "... reference to the document : " + doc.url
+        res.json({
+          "fulfillmentText": answer
         });
- 
+      } else {        
+        res.json({
+          "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you."
+        });
+      }
+    } else {
+      res.json({
+          "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you."
+        });
+    }
+  })
 }
 
+function getBGDocument(opts, cb){
+  
+  var searchind = opts["intent"]["displayName"] + "^" + opts["parameters"]["WhatIsTopic"];
+  console.log("searchind are " + searchind);
+  db.collection(QUESTIONS_COLLECTION).findOne({"searchind": searchind}, function(err, doc) {
+    console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
+    if (err == null) {
+      console.log("OPts " + JSON.stringify(opts))
+      if(doc == null){
+        addDocument(opts, function(){ cb(doc);})
+      } else {
+        cb(doc);
+      }
+
+    } else {
+      return null;
+    }
+  });
+}
+
+// Document structure
+// {
+//   "searchind": "What Is^membership id",
+//   "intent" : {  
+//      "name": "projects/drive-91f16/agent/intents/2d9059a4-aa07-4453-8fb9-5995e97fd41f",
+//      "displayName": "What Is"
+//   },
+//   "questions": ["do you know what bank routing is?" ],
+//   "parameters" : {  
+//      "WhatIsTopic": "bank routing",
+//      "Result": ""
+//   },
+//   "answer" : ""
+//
 
 function replyWithDefinition(opts, res){  
   getDocument(opts, function(doc){
@@ -80,20 +110,7 @@ function replyWithDefinition(opts, res){
   })
 }
 
-// Document structure
-// {
-//   "searchind": "What Is^membership id",
-//   "intent" : {  
-//      "name": "projects/drive-91f16/agent/intents/2d9059a4-aa07-4453-8fb9-5995e97fd41f",
-//      "displayName": "What Is"
-//   },
-//   "questions": ["do you know what bank routing is?" ],
-//   "parameters" : {  
-//      "WhatIsTopic": "bank routing",
-//      "Result": ""
-//   },
-//   "answer" : ""
-//
+
 function getDocument(opts, cb){
   console.log("parameters are " + JSON.stringify(opts) + "db " + db);
   var searchind = opts["intent"]["displayName"] + "^" + opts["parameters"]["WhatIsTopic"];
