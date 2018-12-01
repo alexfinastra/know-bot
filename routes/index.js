@@ -13,6 +13,19 @@ router.get('/', function(req, res, next) {
 	res.redirect('/ask');
 });
 
+router.get('/businessguide',function(req,res,next){
+	res.render('businessguide');
+});
+
+router.get('/splash',function(req,res,next){
+	res.render('splash');
+});
+
+router.post('/splash',function(req, res, next){
+	res.redirect('businessguide');
+});
+
+
 router.get('/login',function(req,res,next){
 	res.render('login');
 });
@@ -122,7 +135,7 @@ router.post('/login',function(req,res,next){
 		      });
 				} else {
 					if(user["confirmed"] == true){
-						res.redirect('/trivia');
+						res.redirect('/ask');
 					} else {
 						res.redirect('/confirmation');
 					}

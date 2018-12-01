@@ -5,6 +5,7 @@ var session_store;
 var nodemailer = require('nodemailer');
 var mongodb = require("mongodb");
 var ObjectID = mongodb.ObjectID;
+var DELIMITER = "~";
 
 /* GET home page. */
 router.get('/', function(req, res) {		
@@ -57,7 +58,7 @@ function replyWithBusinessGuide(opts, res){
 
 function getBGDocument(opts, cb){
   
-  var searchind = opts["intent"]["displayName"] + "^" + opts["parameters"]["WhatIsTopic"];
+  var searchind = opts["intent"]["displayName"] + DELIMITER + opts["parameters"]["WhatIsTopic"];
   console.log("searchind are " + searchind);
   db.collection(QUESTIONS_COLLECTION).findOne({"searchind": searchind}, function(err, doc) {
     console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
@@ -113,7 +114,7 @@ function replyWithDefinition(opts, res){
 
 function getDocument(opts, cb){
   console.log("parameters are " + JSON.stringify(opts) + "db " + db);
-  var searchind = opts["intent"]["displayName"] + "^" + opts["parameters"]["WhatIsTopic"];
+  var searchind = opts["intent"]["displayName"] + DELIMITER + opts["parameters"]["WhatIsTopic"];
   console.log("searchind are " + searchind);
   db.collection(QUESTIONS_COLLECTION).findOne({"searchind": searchind}, function(err, doc) {
     console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
@@ -133,7 +134,7 @@ function getDocument(opts, cb){
 
 function addDocument(opt, cb){ 
   console.log("addDocument  " + JSON.stringify(opt))
- var sindex = opt["intent"]["displayName"] + "^" + opt["parameters"]["WhatIsTopic"];
+ var sindex = opt["intent"]["displayName"] + DELIMITER + opt["parameters"]["WhatIsTopic"];
  var new_doc = {"searchind":  sindex, "intent": opt["intent"], "questions": [opt["queryText"]], "parameters": opt["parameters"], "answer": ""};
  console.log(" New Doc " + new_doc)
   db.collection(QUESTIONS_COLLECTION).insertOne(new_doc, function(err, doc) {
