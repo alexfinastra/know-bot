@@ -38,8 +38,8 @@ module.exports = router;
 function replyWithBusinessGuide(opts, res){  
   getBGDocument(opts, function(doc){
     if( doc != undefined && doc != null){        
-      if(doc.context.length > 0 ){
-        answer = "..." + doc.context.slice(0,50) + "... reference to the document : " + doc.url
+      if(doc.context != null && doc.context.length > 0 ){
+        answer = "..." + doc.context.slice(0,10) + "... reference to the document : " + doc.url
         res.json({
           "fulfillmentText": answer
         });
@@ -66,7 +66,8 @@ function getBGDocument(opts, cb){
       console.log("OPts " + JSON.stringify(opts))
       if(doc == null){
         addDocument(opts, function(){ cb(doc);})
-      } else {
+      } else { 
+        console.log("Doc from db  " + JSON.stringify(doc))
         cb(doc);
       }
 

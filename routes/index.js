@@ -10,7 +10,7 @@ var USERS_COLLECTION = "users";
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-	res.redirect('/ask');
+	res.redirect('/splash');
 });
 
 router.get('/businessguide',function(req,res,next){
