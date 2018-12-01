@@ -58,7 +58,7 @@ function replyWithBusinessGuide(opts, res){
 
 function getBGDocument(opts, cb){
   
-  var searchind = opts["intent"]["displayName"] + DELIMITER + opts["parameters"]["WhatIsTopic"];
+  var searchind = opts["parameters"]["Knowledge-source"] + DELIMITER + opts["parameters"]["businessguide-scope"];
   console.log("searchind are " + searchind);
   db.collection(QUESTIONS_COLLECTION).findOne({"searchind": searchind}, function(err, doc) {
     console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
