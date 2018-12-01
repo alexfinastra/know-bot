@@ -57,10 +57,13 @@ function replyWithBusinessGuide(opts, res){
 }
 
 function getBGDocument(opts, cb){
-  
-  var searchind = opts["parameters"]["Knowledge-source"] + DELIMITER + opts["parameters"]["businessguide-scope"];
+  var search_str = {
+            "searchind": {
+                "$regex": opts["parameters"]["Knowledge-source"] + DELIMITER + opts["parameters"]["businessguide-scope"] + DELIMITER + "*"
+            }
+    }
   console.log("searchind are " + searchind);
-  db.collection(QUESTIONS_COLLECTION).findOne({"searchind": searchind}, function(err, doc) {
+  db.collection(QUESTIONS_COLLECTION).findOne(search_str, function(err, doc) {
     console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
     if (err == null) {
       console.log("OPts " + JSON.stringify(opts))
