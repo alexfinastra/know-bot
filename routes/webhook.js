@@ -63,15 +63,15 @@ function getBGDocument(opts, cb){
             }
     }
   console.log("searchind are " + searchind);
-  db.collection(QUESTIONS_COLLECTION).findOne(search_str, function(err, doc) {
-    console.log("Check if user exists :" + err + " result :" + JSON.stringify(doc));
+  db.collection(QUESTIONS_COLLECTION).find(search_str).toArray(function(err, docs) {
+    console.log("Check if user exists :" + err + " result :" + JSON.stringify(docs));
     if (err == null) {
       console.log("OPts " + JSON.stringify(opts))
-      if(doc == null){
-        addDocument(opts, function(){ cb(doc);})
+      if(docs == null){
+        addDocument(opts, function(){ cb(docs[0]);})
       } else { 
-        console.log("Doc from db  " + JSON.stringify(doc))
-        cb(doc);
+        console.log("Doc from db  " + JSON.stringify(docs[0]))
+        cb(docs[0]);
       }
 
     } else {
