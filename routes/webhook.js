@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var QUESTIONS_COLLECTION = "questions";
+var BUSINESSGUIDES_COLLECTION = "businessguides";
 var session_store;
 var nodemailer = require('nodemailer');
 var mongodb = require("mongodb");
@@ -62,8 +63,8 @@ function getBGDocument(opts, cb){
                 "$regex": opts["parameters"]["Knowledge-source"] + DELIMITER + opts["parameters"]["businessguide-scope"] + DELIMITER + "*"
             }
     }
-  console.log("searchind are " + searchind);
-  db.collection(QUESTIONS_COLLECTION).find(search_str).toArray(function(err, docs) {
+  console.log("search_str are " + search_str);
+  db.collection(BUSINESSGUIDES_COLLECTION).find(search_str).toArray(function(err, docs) {
     console.log("Check if user exists :" + err + " result :" + JSON.stringify(docs));
     if (err == null) {
       console.log("OPts " + JSON.stringify(opts))

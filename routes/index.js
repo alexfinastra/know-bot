@@ -7,6 +7,7 @@ var ObjectID = mongodb.ObjectID;
 
 var QUESTIONS_COLLECTION = "questions";
 var USERS_COLLECTION = "users";
+var BUSINESSGUIDES_COLLECTION = "businessguides";
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
