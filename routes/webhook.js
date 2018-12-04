@@ -40,7 +40,7 @@ function replyWithBusinessGuide(opts, res){
   getBGDocument(opts, function(doc){
     if( doc != undefined && doc != null){        
       if(doc.context != null && doc.context.length > 0 ){
-        answer = "..." + doc.context.slice(0,10).join(' ') + "... reference to the document <a href=\"" + doc.url + "\">business guide</a>"
+        answer = ["..." + doc.context.slice(0,10).join(' ') + "...", "Do you want me to send you a link to this section in document"]
         res.json({
           "fulfillmentText": answer
         });

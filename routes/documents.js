@@ -174,10 +174,25 @@ function split2documents(filename, data, cb){
               last_section = docs.length > 0 ? docs[docs.length-1]["section"] : "NO_SECTION";
               if(pattern_type.indexOf(last_section) == -1){                                
                 var scope = filename.split('.')[0].replace("GPP", "").replace("Business", "").replace("Guide", "").trim();
-                var section = toc[toc_ptrn_ind-1].slice(1,toc[toc_ptrn_ind-1].length).join(' ');               
-                var searchind = "Business Guide"+ DELIMITER + scope + DELIMITER + section;
                 var page = parseInt(pages[toc_ptrn_ind-1]) + parseInt(pages[0]);
-                //console.log(" pattern_type:"+ pattern_type+ " scope:"+ scope+"section :"+ section+"searchind: "+ searchind+" page :"+ page);
+
+                var section = toc[toc_ptrn_ind-1].slice(1,toc[toc_ptrn_ind-1].length).join(' '); 
+                var section_path_arr = [];
+                var section_number_arr = pattern_type.split(' ')[0].split('.')                 
+                //console.log(" section_number_arr ->"+ section_number_arr + " lenght ->" + section_number_arr.length);
+                var temp = [];
+                section_number_arr.forEach(function(num){
+                  temp.push(num)
+                  //console.log(" nsection ->"+ temp.join('.'));
+                  sec = toc.filter(sec => sec[0] ==  temp.join('.'))[0]
+                  //console.log(" sec ->"+ sec )
+                  if(sec != undefined){
+                    section_path_arr.push(sec.slice(1, sec.length).join(' '));
+                    //console.log(" section_path_arr ->"+ section_path_arr )
+                  } 
+                }); 
+                var searchind = "Business Guide"+ DELIMITER + scope + DELIMITER + section_path_arr.join('~');               
+                console.log(" pattern_type ->"+ pattern_type.split(' ')[0] + " searchind -->" + searchind)//+"section :"+ section+"searchind: "+ searchind+" page :"+ page);
                 docs.push({
                   "searchind": searchind.toLowerCase() , 
                   "intent": null, 
