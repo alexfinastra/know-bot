@@ -103,17 +103,26 @@ function replyWithBusinessGuide(opts, res){
       if(doc.context != null && doc.context.length > 0 ){
         answer = "..." + doc.context.slice(0,10).join(' ') + "..." ;       
         res.json({ 
-          "fulfillmentText": answer,
           "fulfillmentMessages": [
           {
             "payload": {
               "messages": [
                 {
-                  "text": answer
+                  "attachment": {
+                    "type": "template",
+                    "payload": {
+                      "template_type": "button",
+                      "text": answer,
+                      "buttons": [
+                        {
+                          "type": "web_url",
+                          "url": doc.url ,
+                          "title": "document ref"
+                        }
+                      ]
+                    }
+                  }
                 }
-              ],
-              "redirect_to_blocks": [
-                "Welcome Message"
               ]
             }
           }
