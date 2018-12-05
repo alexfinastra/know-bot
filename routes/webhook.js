@@ -97,10 +97,35 @@ function fullResponseDialogflow(){
 
 function replyWithBusinessGuide(opts, res){  
   getBGDocument(opts, function(doc){
+    console.log("I am in call back " + JSON.stringify(doc));
     if( doc != undefined && doc != null){        
       if(doc.context != null && doc.context.length > 0 ){
-        answer = ["..." + doc.context.slice(0,10).join(' ') + "...", "Do you want me to send you a link to this section in document"]
-        res.json({ "fulfillmentText": answer });
+        answer = "..." + doc.context.slice(0,10).join(' ') + "..." ;       
+        res.json({ 
+          "fulfillmentText": answer,
+          "fulfillmentMessages": [
+            {
+              "messages": [
+                {
+                  "text": "Random text inserted here",
+                  "quick_replies": [
+                    {
+                      "title": "Quick Reply Button Name",
+                      "block_names": [
+                        "Chatfuel Block Name - Case Sensitive"
+                      ]
+                    },
+                    {
+                      "title": "Quick Reply Button Name",
+                      "block_names": [
+                        "Chatfuel Block Name - Case Sensitive"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ] });
         //res.json(fullResponseDialogflow());
       } else { 
         //res.json(fullResponseDialogflow());       
