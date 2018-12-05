@@ -36,31 +36,89 @@ router.post('/', function(req, res, next) {
 
 module.exports = router;
 
+function fullResponseDialogflow(){
+  return {
+  "fulfillmentText": "This is a text response",
+  "fulfillmentMessages": [
+    {
+      "card": {
+        "title": "card title",
+        "subtitle": "card text",
+        "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
+        "buttons": [
+          {
+            "text": "button text",
+            "postback": "https://assistant.google.com/"
+          }
+        ]
+      }
+    }
+  ],
+  "source": "example.com",
+  "payload": {
+    "google": {
+      "expectUserResponse": true,
+      "richResponse": {
+        "items": [
+          {
+            "simpleResponse": {
+              "textToSpeech": "this is a simple response"
+            }
+          }
+        ]
+      }
+    },
+    "facebook": {
+      "text": "Hello, Facebook!"
+    },
+    "slack": {
+      "text": "This is a text response for Slack."
+    }
+  },
+ // "outputContexts": [
+ //   {
+ //     "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/context name",
+ //     "lifespanCount": 5,
+ //     "parameters": {
+ //       "param": "param value"
+ //     }
+ //   }
+ // ],
+  "followupEventInput": {
+    "name": "event name",
+    "languageCode": "en-US",
+    "parameters": {
+      "param": "param value"
+    }
+  }
+}
+}
+
+
 function replyWithBusinessGuide(opts, res){  
   getBGDocument(opts, function(doc){
     if( doc != undefined && doc != null){        
       if(doc.context != null && doc.context.length > 0 ){
-        answer = ["..." + doc.context.slice(0,10).join(' ') + "...", "Do you want me to send you a link to this section in document"]
-        res.json({
-          "fulfillmentText": answer
-        });
-      } else {        
-        res.json({
-          "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you."
-        });
+        //answer = ["..." + doc.context.slice(0,10).join(' ') + "...", "Do you want me to send you a link to this section in document"]
+        //res.json({ "fulfillmentText": answer });
+        res.json(fullResponseDialogflow());
+      } else { 
+        res.json(fullResponseDialogflow());       
+        //res.json({ "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you." });
       }
     } else {
-      res.json({
-          "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you."
-        });
+      res.json(fullResponseDialogflow());
+      //res.json({"fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you."});
     }
   })
 }
 
 function getBGDocument(opts, cb){
+  var params = opts["parameters"]
+  var sindex  = params["Knowledge-source"] + DELIMITER + params["businessguide-scope"] + DELIMITER + "*";
   var search_str = {
             "searchind": {
-                "$regex": opts["parameters"]["Knowledge-source"].toLowerCase() + DELIMITER + opts["parameters"]["businessguide-scope"].toLowerCase() + DELIMITER + "*"
+                "$regex": sindex.toLowerCase()
             }
     }
   console.log("search_str are " + JSON.stringify(search_str));

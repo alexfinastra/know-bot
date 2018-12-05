@@ -1,0 +1,1 @@
+set GOOGLE_APPLICATION_CREDENTIALS="C:\projects\know-bot\know-bot-314da-6eb32978975f.json"

@@ -16,4 +16,5 @@ window.mobileAndTabletcheck = function() {
 $(document).ready(function(){	
 	resizeChat();
 	window.addEventListener("resize", resizeChat);
+	$('')
 });
