@@ -95,6 +95,7 @@ function fullResponseDialogflow(){
 }
 
 
+
 function replyWithBusinessGuide(opts, res){  
   getBGDocument(opts, function(doc){
     console.log("I am in call back " + JSON.stringify(doc));
@@ -104,28 +105,19 @@ function replyWithBusinessGuide(opts, res){
         res.json({ 
           "fulfillmentText": answer,
           "fulfillmentMessages": [
-            {
+          {
+            "payload": {
               "messages": [
                 {
-                  "text": "Random text inserted here",
-                  "quick_replies": [
-                    {
-                      "title": "Quick Reply Button Name",
-                      "block_names": [
-                        "Chatfuel Block Name - Case Sensitive"
-                      ]
-                    },
-                    {
-                      "title": "Quick Reply Button Name",
-                      "block_names": [
-                        "Chatfuel Block Name - Case Sensitive"
-                      ]
-                    }
-                  ]
+                  "text": answer
                 }
+              ],
+              "redirect_to_blocks": [
+                "Welcome Message"
               ]
             }
-          ] });
+          }
+        ]});
         //res.json(fullResponseDialogflow());
       } else { 
         //res.json(fullResponseDialogflow());       
