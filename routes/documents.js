@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 var pdf = require('pdf-parse');
-var BUSINESSGUIDES_COLLECTION = "businessguides";
+
+var BUSINESSGUIDES_COLLECTION = "businessguide";
 var DELIMITER = "~";
 
 router.get('/', function(req, res, next) {
@@ -100,6 +101,18 @@ function splitText(text){
   return ret; 
 }
 
+function getSection(section_path_arr){  
+  var match_sections = [];
+  var result = sections[0]["value"];
+  sections.forEach(function(section){
+    has_match = section["synonyms"].filter(syn => -1 !== section_path_arr.join(' ').indexOf(syn))
+    if(has_match.length > 0){
+      result = section["value"]
+    }
+  })  
+  return result
+}
+
 function split2documents(filename, data, cb){ 
   var docs = [];
   var words_arr = splitText(data.text.toLowerCase());
@@ -111,7 +124,9 @@ function split2documents(filename, data, cb){
   var pattern_type = "";
   var newEntry = true;  
   
+  
   pages.push(2);
+  var scope = filename.split('.')[0].replace("GPP", "").replace("Business", "").replace("Guide", "").trim();
   //console.log(" For "+ filename + " number of words : " + words_arr.length)
   for (var i = 0; i < words_arr.length; i++) {
     var word = verifyWord(words_arr[i]) 
@@ -170,40 +185,27 @@ function split2documents(filename, data, cb){
                 }  
               }
             } else{
-              //console.log("Pattern -->" +pattern_type + " collect word : " + word )              
-              last_section = docs.length > 0 ? docs[docs.length-1]["section"] : "NO_SECTION";
-              if(pattern_type.indexOf(last_section) == -1){                                
-                var scope = filename.split('.')[0].replace("GPP", "").replace("Business", "").replace("Guide", "").trim();
+              var section_path_arr = []; var temp = [];
+              var section_number_arr = pattern_type.split(' ')[0].split('.');
+              section_number_arr.forEach(function(num){
+                temp.push(num)
+                sec = toc.filter(sec => sec[0] ==  temp.join('.'))[0];
+                if(sec != undefined){ section_path_arr.push(sec.slice(1, sec.length).join(' ')); } 
+              }); 
+              last_section_path = docs.length > 0 ? docs[docs.length-1]["section_path"] : [];  
+              if(arraysEqual(last_section_path, section_path_arr) == false){                
                 var page = parseInt(pages[toc_ptrn_ind-1]) + parseInt(pages[0]);
-
-                var section = toc[toc_ptrn_ind-1].slice(1,toc[toc_ptrn_ind-1].length).join(' '); 
-                var section_path_arr = [];
-                var section_number_arr = pattern_type.split(' ')[0].split('.')                 
-                //console.log(" section_number_arr ->"+ section_number_arr + " lenght ->" + section_number_arr.length);
-                var temp = [];
-                section_number_arr.forEach(function(num){
-                  temp.push(num)
-                  //console.log(" nsection ->"+ temp.join('.'));
-                  sec = toc.filter(sec => sec[0] ==  temp.join('.'))[0]
-                  //console.log(" sec ->"+ sec )
-                  if(sec != undefined){
-                    section_path_arr.push(sec.slice(1, sec.length).join(' '));
-                    //console.log(" section_path_arr ->"+ section_path_arr )
-                  } 
-                }); 
-                var searchind = "Business Guide"+ DELIMITER + scope + DELIMITER + section_path_arr.join('~');               
-                console.log(" pattern_type ->"+ pattern_type.split(' ')[0] + " searchind -->" + searchind)//+"section :"+ section+"searchind: "+ searchind+" page :"+ page);
                 docs.push({
-                  "searchind": searchind.toLowerCase() , 
                   "intent": null, 
                   "questions": [], 
-                  "parameters": null, 
+                  "parameters": [], 
                   "answer": "",
                   "source": "GPP Business Guide".toLowerCase(),
                   "scope":  scope.toLowerCase(),
-                  "section": section.toLowerCase(),
+                  "section": getSection(section_path_arr).toLowerCase(),
+                  "section_path": section_path_arr,
                   "context": [],
-                  "url": "https://know-robot.herokuapp.com/docs/" + filename + "#page=" + page
+                  "context_url": "https://know-robot.herokuapp.com/docs/" + filename + "#page=" + page
                 })
               } 
 
@@ -214,9 +216,21 @@ function split2documents(filename, data, cb){
       }
     }  
   }
-  console.log("File name " +filename+ " collected text " + JSON.stringify(toc) + " number of sections: " + docs.length);
+  //console.log("File name " +filename+ " collected text " + JSON.stringify(toc) + " number of sections: " + docs.length);
   cb(docs);
 }
+
+function arraysEqual(arr1, arr2) {
+  if(arr1.length !== arr2.length)
+    return false;
+  for(var i = arr1.length; i--;) {
+    if(arr1[i] !== arr2[i])
+        return false;
+  }
+
+  return true;
+}
+
 
 String.prototype.capitalize = function() {
   str_arr = this.split(" ")
@@ -231,4 +245,113 @@ String.prototype.capitalize = function() {
   return res.join(" ");
 }
 
-
+var sections = [
+  {
+    "order" : 1,
+    "value": "introduction",
+    "synonyms": [
+      "introduction",
+      "target audience",
+      "related documents",
+      "overview"
+    ]
+  },{
+    "order" : 2,
+    "value": "processing",
+    "synonyms": [
+      "processing",
+      "business flow",
+      "flow",
+      "workflow",
+      "workflow details",
+      "queue handling",
+      "use cases",
+      "application features",
+      "soa services"
+    ]
+  },
+  {
+    "order" : 3,
+    "value": "manual handling",
+    "synonyms": [
+      "manual handling",
+      "gui",
+      "message actions",
+      "user actions",
+      "repair statuses",
+      "user involvement statuses",
+      "web",
+      "web ui",
+      "web app",
+      "user interface",
+      "browser"
+    ]
+  },
+  {
+    "order" : 4,
+    "value": "setup",
+    "synonyms": [
+      "setup",
+      "configuration",
+      "system configuration",
+      "system options",
+      "general setup",
+      "recomended setup",
+      "user defined queue",
+      "system parameter",
+      "mapping rules",
+      "payment transformation",
+      "upload",
+      "basic setup"
+    ]
+  },
+  {
+    "order" : 5,
+    "value": "message data",
+    "synonyms": [
+      "message data",
+      "errors",
+      "audittrail",
+      "message attributes",
+      "message status",
+      "mapping",
+      "user defined fields"
+    ]
+  },
+  {
+    "order" : 6,
+    "value": "Inetrfaces",
+    "synonyms": [
+      "inetrfaces"
+    ]
+  },
+  {
+    "order" : 7,
+    "value": "business setup",
+    "synonyms": [
+      "business rules",
+      "client rules",
+      "business profile",
+      "static data",
+      "tasks",
+      "business setup"
+    ]
+  },
+  {
+    "order" : 8,
+    "value": "system setup",
+    "synonyms": [
+      "system rules",
+      "system profiles",
+      "entitlement"
+    ]
+  },
+  {
+    "order" : 9,
+    "value": "appendix",
+    "synonyms": [
+      "appendix",
+      "glossary"
+    ]
+  }
+]

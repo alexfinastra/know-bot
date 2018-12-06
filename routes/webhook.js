@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var QUESTIONS_COLLECTION = "questions";
-var BUSINESSGUIDES_COLLECTION = "businessguides";
+var BUSINESSGUIDES_COLLECTION = "businessguide";
 var session_store;
 var nodemailer = require('nodemailer');
 var mongodb = require("mongodb");
@@ -36,72 +36,12 @@ router.post('/', function(req, res, next) {
 
 module.exports = router;
 
-function fullResponseDialogflow(){
-  return {
-  "fulfillmentText": "This is a text response",
-  "fulfillmentMessages": [
-    {
-      "card": {
-        "title": "card title",
-        "subtitle": "card text",
-        "imageUri": "https://assistant.google.com/static/images/molecule/Molecule-Formation-stop.png",
-        "buttons": [
-          {
-            "text": "button text",
-            "postback": "https://assistant.google.com/"
-          }
-        ]
-      }
-    }
-  ],
-  "source": "example.com",
-  "payload": {
-    "google": {
-      "expectUserResponse": true,
-      "richResponse": {
-        "items": [
-          {
-            "simpleResponse": {
-              "textToSpeech": "this is a simple response"
-            }
-          }
-        ]
-      }
-    },
-    "facebook": {
-      "text": "Hello, Facebook!"
-    },
-    "slack": {
-      "text": "This is a text response for Slack."
-    }
-  },
- // "outputContexts": [
- //   {
- //     "name": "projects/${PROJECT_ID}/agent/sessions/${SESSION_ID}/contexts/context name",
- //     "lifespanCount": 5,
- //     "parameters": {
- //       "param": "param value"
- //     }
- //   }
- // ],
-  "followupEventInput": {
-    "name": "event name",
-    "languageCode": "en-US",
-    "parameters": {
-      "param": "param value"
-    }
-  }
-}
-}
-
-
-
 function replyWithBusinessGuide(opts, res){  
   getBGDocument(opts, function(doc){
     console.log("I am in call back " + JSON.stringify(doc));
     if( doc != undefined && doc != null){        
       if(doc.context != null && doc.context.length > 0 ){
-        answer = "..." + doc.context.slice(0,10).join(' ') + "..." ;       
+        answer = "<b>GPP Business Guide</b>\n" + doc.context.slice(0,20).join(' ') + "..." ;       
         res.json({ 
           "fulfillmentMessages": [
           {
@@ -117,7 +57,7 @@ function replyWithBusinessGuide(opts, res){
                         {
                           "type": "web_url",
                           "url": doc.url ,
-                          "title": "document ref"
+                          "title": "show more ..."
                         }
                       ]
                     }
@@ -127,13 +67,10 @@ function replyWithBusinessGuide(opts, res){
             }
           }
         ]});
-        //res.json(fullResponseDialogflow());
-      } else { 
-        //res.json(fullResponseDialogflow());       
+      } else {              
         res.json({ "fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you." });
       }
-    } else {
-      //res.json(fullResponseDialogflow());
+    } else {      
       res.json({"fulfillmentText": "Sorry. Not sure about this one… will check with Jedi and get back to you."});
     }
   })
@@ -141,12 +78,10 @@ function replyWithBusinessGuide(opts, res){
 
 function getBGDocument(opts, cb){
   var params = opts["parameters"]
-  var sindex  = params["Knowledge-source"] + DELIMITER + params["businessguide-scope"] + DELIMITER + "*";
   var search_str = {
-            "searchind": {
-                "$regex": sindex.toLowerCase()
-            }
-    }
+    "scope": params["businessguide-scope"].toLowerCase(),
+    "section": ((params["businessguide-section"].length > 0) ? params["businessguide-section"].toLowerCase() : "introduction")
+  }
   console.log("search_str are " + JSON.stringify(search_str));
   db.collection(BUSINESSGUIDES_COLLECTION).find(search_str).toArray(function(err, docs) {
     console.log("Check if docs exists :" + err + " result :" + JSON.stringify(docs));
