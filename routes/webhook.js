@@ -41,7 +41,8 @@ function replyWithBusinessGuide(opts, res){
     console.log("I am in call back " + JSON.stringify(doc));
     if( doc != undefined && doc != null){        
       if(doc.context != null && doc.context.length > 0 ){
-        answer = "*GPP Business Guide*\n_" + doc.context.slice(0,20).join(' ') + "..._" ;       
+        text = doc.context.slice(0,20).join(' ')        
+        answer = "From GPP Business Guide\n" + (text.charAt(0).toUpperCase() + text.toLowerCase().slice(1)) + "..._" ;       
         res.json({ 
           "fulfillmentMessages": [
           {
