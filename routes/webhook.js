@@ -42,7 +42,7 @@ function replyWithBusinessGuide(opts, res){
     if( doc != undefined && doc != null){        
       if(doc.context != null && doc.context.length > 0 ){
         text = doc.context.slice(0,20).join(' ')        
-        answer = "From GPP Business Guide\n" + (text.charAt(0).toUpperCase() + text.toLowerCase().slice(1)) + "..._" ;       
+        answer = "From " + doc.source + "\n\n" + (text.charAt(0).toUpperCase() + text.toLowerCase().slice(1)) + "..." ;       
         res.json({ 
           "fulfillmentMessages": [
           {
