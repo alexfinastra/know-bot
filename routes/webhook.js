@@ -56,7 +56,7 @@ function replyWithBusinessGuide(opts, res){
                       "buttons": [
                         {
                           "type": "web_url",
-                          "url": doc.url ,
+                          "url": doc.context_url ,
                           "title": "show more ..."
                         }
                       ]
