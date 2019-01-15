@@ -88,7 +88,7 @@ router.post('/answer',function(req, res, next){
 		    if (err) {
 		      handleError(res, err.message, "Failed to update document");
 		    } else {
-		      res.redirect('ask');
+		      res.redirect('businessguide');
 		    }
 		  });
     }
