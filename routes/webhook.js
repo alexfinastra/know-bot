@@ -25,7 +25,7 @@ router.post('/', function(req, res, next) {
     case "what is":
       replyWithDefinition(req.body.queryResult, res) 
       break; 
-    case "featurefheck":
+    case "featurecheck":
       replyWithFeature(req.body.queryResult, res) 
       break;  
     case "business guide":
@@ -181,7 +181,7 @@ var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'finastra.integration.team@gmail.com',
-    pass: 'koza2012'
+    pass: 'sharik2019'
   }
 });
 
